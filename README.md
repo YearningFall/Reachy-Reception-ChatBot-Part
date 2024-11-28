@@ -1,6 +1,9 @@
-# Reachy-Reception (ChatBot Part)
+# Reachy-Reception
 
-This is the chatbot component of the Reception system for Reachy, a humanoid robot. The chatbot part is designed to facilitate interactive conversations with users, enhancing customer service experiences. Please note that successful operation of this chatbot requires face detection integration to recognize users before initiating the chatbot functionality.
+This project is a combination of two parts, the facial detection-recognition, and the chatbot system.
+This is the chatbot component of the Reception system for Reachy, a humanoid robot. The chatbot part is designed to facilitate interactive conversations with users, enhancing customer service experiences. 
+Even though this project is programmed with Reachy Robot in mind, this project could be applied anywhere as long as you have appropriate hardware and after adjusting a few parameters in existing codes.
+The successful operation of this chatbot requires face detection integration to recognize users before initiating the chatbot functionality.
 
 ## Reception Chatbot Project
 
@@ -9,6 +12,8 @@ This project aims to create an interactive, chatbot-based receptionist system us
 - **Ollama** as a language model to generate context-aware responses
 - **Pico TTS** for producing spoken responses
 - **Flask Server** for handling data communication between Reachy and the local machine
+- **YOLOv5** for the facial detection process
+- **dlib library** for the facial recognition process and for facial embedding database
 
 ## Project Overview
 
@@ -17,6 +22,7 @@ The Reception Chatbot Project enables the Reachy robot to function as a receptio
 2. **Sending confirmed text data to Ollama** on a local machine for generating responsive answers.
 3. **Vocalizing responses using Pico TTS**, enabling natural and efficient voice interaction.
 4. **Managing real-time communication** between the robot and the local system through Flask.
+5. **Face detection and recognition** to let the robot detect and recognize between guests and staff.
 
 ## Key Components
 
@@ -24,11 +30,13 @@ The Reception Chatbot Project enables the Reachy robot to function as a receptio
 - **Flask**: A micro web framework to handle HTTP requests for data exchange between Reachy and the local machine.
 - **Ollama**: A large language model hosted on a local machine that generates responses based on user input.
 - **Pico TTS**: Text-to-speech engine used for delivering spoken responses, optimized for lightweight and clear audio on a Raspberry Pi 3.
+- **YOLOv5**: An object detection model, used to find faces before cropping it to be sent to facial recognition. 
+- **dlib**: A C++ toolkit used for its facial recognition, face embeddings received from dlib can be saved into .pkl files.
 
 ## Project Structure
 
 - **app**: Contains the Flask server files and API endpoints.
-- **models**: Contains files and configurations for Vosk, Ollama, and Pico TTS.
+- **models**: Contains files and configurations for Vosk, Ollama, Pico TTS, and YOLOv5 weight.
 - **scripts**: Helper scripts for setup, deployment, and configuration.
 
 ## Installation
@@ -52,6 +60,13 @@ Before setting up the project, ensure the following dependencies are installed:
 3. **Pico TTS**
    - Install using: `sudo apt install libttspico-utils`.
    - Test with: `pico2wave -w test.wav "Hello, this is a test." && aplay test.wav`.
+
+4. **YOLOv5**
+   - Install via: `git clone https://github.com/ultralytics/yolov5.git && cd yolov5 && pip install -r requirements.txt`
+   - For more information, refer to https://github.com/ultralytics/yolov5
+
+5. **dlib**
+   - Install via: `pip install dlib`
 ---
 
 ### Setup
@@ -84,16 +99,22 @@ Before setting up the project, ensure the following dependencies are installed:
 
 The Reception Chatbot follows these steps during operation:
 
-1. **Keyword Detection**: 
+1. **Face Detection**:
+   - The robot must first detect a face, before cropping the face and sending it to be recognized.
+
+2. **Face Recognition**:
+   - dlib checks, if the face detected, is similar to any faces stored in the embedding.
+
+4. **Keyword Detection**: 
    - The Reachy robot listens for specific keywords, such as "Reception," using the Vosk model.
    
-2. **Confirmation Phase**:
+5. **Confirmation Phase**:
    - The system enters a confirmation phase, where the user confirms detected speech. Confirmed inputs are sent to the Flask server for processing.
 
-3. **Ollama Response Generation**:
+6. **Ollama Response Generation**:
    - The local system, hosting Ollama, processes the confirmed input to generate context-aware responses.
 
-4. **Response Delivery**:
+7. **Response Delivery**:
    - The response is sent back to Reachy, which vocalizes it using Pico TTS, completing the interaction loop.
 
 ---
