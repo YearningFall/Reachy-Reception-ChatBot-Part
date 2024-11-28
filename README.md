@@ -5,7 +5,7 @@ This is the chatbot component of the Reception system for Reachy, a humanoid rob
 Even though this project is programmed with Reachy Robot in mind, this project could be applied anywhere as long as you have appropriate hardware and after adjusting a few parameters in existing codes.
 The successful operation of this chatbot requires face detection integration to recognize users before initiating the chatbot functionality.
 
-## Reception Chatbot Project
+## Reception Project
 
 This project aims to create an interactive, chatbot-based receptionist system using the Reachy robot. The system is intended for customer service environments and leverages various technologies for seamless and efficient human-robot interaction:
 - **Vosk Model** for lightweight speech recognition
