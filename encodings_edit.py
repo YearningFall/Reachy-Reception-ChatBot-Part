@@ -177,21 +177,17 @@ def extract_frames_and_encode(video_path, frame_interval=FRAME_INTERVAL):
         if frame_count % frame_interval == 0:
             # Convert BGR (OpenCV) to RGB (face_recognition uses RGB)
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            # Check the image shape and type
-            print(f"Frame shape: {rgb_frame.shape}, dtype: {rgb_frame.dtype}")
-            # Ensure the image is in RGB format
-            if rgb_frame.ndim == 3 and rgb_frame.shape[2] == 3:
-                angles = [-15, 0, 15]
-                for angle in angles:
-                    rotated_frame = rotate_image(rgb_frame, angle)
-                    # Get face encodings for the frame
-                    encodings = face_recognition.face_encodings(rotated_frame)
-                    if encodings:
-                        # Add any found encodings to our list
-                        # Assuming there's only one face per frame
-                        face_encodings.append(encodings[0])
-            else:
-                print("Error: Frame is not in RGB format.")
+            
+            angles = [-15, 0, 15]
+            for angle in angles:
+                rotated_frame = rotate_image(rgb_frame, angle)
+                # Get face encodings for the frame
+                encodings = face_recognition.face_encodings(rotated_frame)
+                if encodings:
+                    # Add any found encodings to our list
+                    # Assuming there's only one face per frame
+                    face_encodings.append(encodings[0])
+           
             
         frame_count += 1
 
@@ -201,17 +197,10 @@ def extract_frames_and_encode(video_path, frame_interval=FRAME_INTERVAL):
     return face_encodings
 
 def rotate_image(image, angle):
-    if image.ndim != 3 and image.shape[2] != 3:
-        print(f"Error: Image is not in RGB format. Shape: {image.shape}")
-        return image 
     (h, w) = image.shape[:2]
     center = (w // 2, h // 2)
     M = cv2.getRotationMatrix2D(center, angle, 1.0)
     rotated = cv2.warpAffine(image, M, (w, h))
-    rotated = cv2.convertScaleAbs(rotated)
-    print("Rotated image")
-    print(f"Rotated Image: dtype={rotated.dtype}, shape={rotated.shape}, ndim={rotated.ndim}")
-    
     return rotated
 
 # Save face encodings and names to file
